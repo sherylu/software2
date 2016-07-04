@@ -5,6 +5,13 @@
    }
 %>
 
+<style>
+    .selected-row {
+        color: #fff !important;
+        background-color: #d34615 !important;
+    }
+</style>
+
 
 <div class="container">
     
@@ -17,7 +24,7 @@
     <div class="row">
         <div class="col-md-12">
             <h2>Vuelos de Ida</h2>
-            <table class="table table-striped">
+            <table class="table table-striped" id="leaving">
                 <thead>
                     <tr>
                         <th>Codigo</th>
@@ -50,7 +57,7 @@
         <div class="col-md-12" >
             
             <h2>Vuelos de Regreso</h2>
-            <table class="table table-striped">
+            <table class="table table-striped" id="returning">
                 <thead>
                     <tr>
                         <th>Codigo</th>
@@ -81,3 +88,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    
+    $(document).ready(function() {
+        $('#leaving > tbody > tr').click(function() {
+           $('#leaving >tbody > tr').removeClass('selected-row');
+           if ($(this).hasClass('selected-row')) {
+               $(this).removeClass('selected-row');
+           } else {
+               $(this).addClass('selected-row');
+           }
+        });
+        $('#returning > tbody > tr').click(function() {
+           $('#returning > tbody > tr').removeClass('selected-row');
+           if ($(this).hasClass('selected-row')) {
+               $(this).removeClass('selected-row');
+           } else {
+               $(this).addClass('selected-row');
+           }
+        });
+    });
+</script>
