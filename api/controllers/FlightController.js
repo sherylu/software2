@@ -36,7 +36,7 @@ module.exports = {
     	        }
     	    })
         } else {
-        
+            
         
         Flight.find({departureDate: { '>=': flightDeparture}}).
             populate('seats', {where: {available: true}}).
@@ -48,14 +48,23 @@ module.exports = {
                     }
                     if (departureFlights === undefined) {
                         errorsMsg.push('No se encontraron vuelos disponibles para la salida')
-                        res.view('flight/search', {errors: errorsMsg});
+                        res.view('flight/search', { errors: errorsMsg,
+                                                    departures: [],
+                                                    arrivals: []
+                        });
                     } else {
                         departureFlights = departureFlights.filter(function(f) {
-                           return f.seats.length > totalseats
-                        });
+                                                return f.seats.length > totalseats
+                                                         }).filter(function(f) {
+                                                return f.departureAirport.code == departureAirport             
+                                                         }).filter(function(f) {
+                                                return f.arrivalAirport.code == arrivalAirport
+                                                         });
+                                                         
+                                
                         res.view('flight/search', {errors: errorsMsg,
                                                    departures: departureFlights,
-                                                   params: this.param
+                                                   arrivals: []
                         });
                     }
                     
