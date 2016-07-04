@@ -61,11 +61,46 @@ module.exports = {
                                                 return f.arrivalAirport.code == arrivalAirport
                                                          });
                                                          
+
+                        if (tripOption == "option1") {
                                 
-                        res.view('flight/search', {errors: errorsMsg,
-                                                   departures: departureFlights,
-                                                   arrivals: []
-                        });
+                            res.view('flight/search', {errors: errorsMsg,
+                                                       departures: departureFlights,
+                                                       arrivals: [],
+                                                       oneWay: true
+                            });
+                        } else {
+                            Flight.find({departureDate: { '>=': flightArrival}}).
+                                populate('seats', {where: {available: true}}).
+                                populate('departureAirport').
+                                populate('arrivalAirport').
+                                    exec(function(err, returnFlights) {
+                                        if (err) {
+                                            return res.negotiate(err);
+                                        }
+                                        if (returnFlights === undefined) {
+                                            errorsMsg.push('No se encontraron vuelos disponibles para el regreso')
+                                            res.view('flight/search', { errors: errorsMsg,
+                                                                        departures: departureFlights,
+                                                                        arrivals: []
+                                            });
+                                        } else {
+                                            returnFlights = returnFlights.filter(function(f) {
+                                                                return f.seats.length > totalseats
+                                                                         }).filter(function(f) {
+                                                                return f.departureAirport.code == arrivalAirport             
+                                                                         }).filter(function(f) {
+                                                                return f.arrivalAirport.code == departureAirport
+                                                                         });
+                                            
+                                            res.view('flight/search', {errors: errorsMsg,
+                                                                       departures: departureFlights,
+                                                                       arrivals: returnFlights,
+                                            });
+                                        }
+                                    });
+                                
+                        }
                     }
                     
                 });

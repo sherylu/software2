@@ -47,7 +47,7 @@
     </div>
     
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" >
             
             <h2>Vuelos de Regreso</h2>
             <table class="table table-striped">
@@ -63,14 +63,14 @@
                 </thead>
                 <tbody>
                     
-                    <% _.each(arrivals, function(departure) { %>
+                    <% _.each(arrivals, function(arrival) { %>
                         <tr>
-                            <td><%=departure.flightCode%></td>
-                            <td><%=toMyDate(departure.departureDate)%></td>
-                            <td><%=toMyDate(departure.arrivalDate)%></td>
-                            <td><%=departure.departureAirport.code%></td>
-                            <td><%=departure.arrivalAirport.code%></td>
-                            <td><%=departure.seats.length%></td>
+                            <td><%=arrival.flightCode%></td>
+                            <td><%=toMyDate(arrival.departureDate)%></td>
+                            <td><%=toMyDate(arrival.arrivalDate)%></td>
+                            <td><%=arrival.departureAirport.code%></td>
+                            <td><%=arrival.arrivalAirport.code%></td>
+                            <td><%=arrival.seats.length%></td>
                         </tr>
                     <% }) %>
                     
