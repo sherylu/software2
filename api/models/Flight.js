@@ -45,16 +45,16 @@ module.exports = {
       dominant: true
     }
   },
-  validate: function(param) {
+  validateForm: function(param) {
     
-        var departureAirport = param('departure');
-        var arrivalAirport   = param('arrival');
-        var tripOption       = param('optionsRadios');
-        var seatAdult        = parseInt(param('seats'));
-        var seatChild        = parseInt(param('seatschild'));
-        var seatToddler      = parseInt(param('seatstod'));
-        var flightDeparture  = new Date(param('startDate'));
-        var flightArrival    = new Date(param('endDate'));
+        var departureAirport = param.departure;
+        var arrivalAirport   = param.arrival;
+        var tripOption       = param.optionsRadios;
+        var seatAdult        = parseInt(param.seats);
+        var seatChild        = parseInt(param.seatschild);
+        var seatToddler      = parseInt(param.seatstod);
+        var flightDeparture  = new Date(param.startDate);
+        var flightArrival    = new Date(param.endDate);
         var totalseats       = seatAdult + seatChild;
     
         var errorsMsg = [];
@@ -71,7 +71,6 @@ module.exports = {
         if (totalseats <= 0) {
             errorsMsg.push('Al menos un ticket debe ser seleccionado');
         }
-        console.log('departureAirport: '+ departureAirport+'\tarrivalAirpot: '+arrivalAirport+'\ttripOption: '+tripOption);
         return errorsMsg;
   }
 };

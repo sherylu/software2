@@ -19,12 +19,10 @@ module.exports = {
         var totalseats       = seatAdult + seatChild;
         
         //TODO: validate request method
-        var errorsMsg = Flight.validate(req.allParams);
+        var values = req.allParams();
+        var errorsMsg = Flight.validateForm(values);
         
-        console.log(req.allParams);
 
-        
-        
         if (errorsMsg.length>0) {
             Airport.find().exec(function(err, allAirports){
     	        if(err || allAirports === undefined) {
