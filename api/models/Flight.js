@@ -71,6 +71,22 @@ module.exports = {
         if (totalseats <= 0) {
             errorsMsg.push('Al menos un ticket debe ser seleccionado');
         }
+        Airport.findOne({code: departureAirport}).exec(function (err,depairport){
+          if(err)
+          {
+            errorsMsg.push('No se encontro un aeropuerto de salida con ese codigo');
+          }
+          if(depairport)
+          {
+            Airport.count({where: {code: arrivalAirport, city: depairport.city}}).exec(function(err,arrairport){
+              if(arrairport>0)
+              {
+                errorsMsg.push('Ambos aeropuertos estan en la misma ciudad');
+              }
+            })
+          }
+        })
+        
         return errorsMsg;
   }
 };
