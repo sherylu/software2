@@ -1,0 +1,18 @@
+<div class="alert alert-danger alert-dismissible fade in" role="alert" <%= errors == null || errors.length == 0 ? "hidden" : "" %>>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    <h4>Lo sentimos! Al parecer existieron los siguientes errores:</h4>
+    
+    <ul>
+        <% _.each(errors, function(error) { %>
+            <li><%=error%></li>
+        <% }) %>
+    </ul>
+    <br/>
+    
+        <a href="/">
+        <button type="button" class="btn btn-danger">Regresar al hogar</button>
+        </a>
+    
+</div>

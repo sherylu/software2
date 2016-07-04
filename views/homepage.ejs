@@ -1,0 +1,214 @@
+<%- include partials/banner.ejs %>
+
+<div class="container">
+  
+  <div  class="col-md-8">
+    
+    <%- include partials/error.ejs %>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Elija su destino</h3>
+      </div>
+      <div class="panel-body">
+        <h3>A donde te llevamos?</h3>
+        
+   <form class="form-horizontal" method="POST" action="/flight/search">
+    <fieldset>
+
+    <div class="form-group">
+      <label for="select" class="col-md-4 control-label">Desde</label>
+      <div class="col-md-8">
+        
+        <div class="input-group">
+          <select class="form-control" id="departure" name="departure">
+            <option selected disabled hidden>Escoja su lugar de partida</option>
+            <% _.each(airports, function(airport) { %>
+              <option value="<%= airport.code %>"><%=airport.name + ' - ' + airport.code%></option>
+            <% }) %>
+          </select>
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-map-marker"></span>
+          </span>
+        </div>
+        <br>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label for="select" class="col-md-4 control-label">Destino</label>
+      <div class="col-md-8">
+        <div class="input-group">
+          <select class="form-control" id="arrival" name="arrival">
+            <option selected disabled hidden>Escoja su lugar de llegada</option>
+            <% _.each(airports, function(airport) { %>
+              <option value="<%= airport.code %>"><%=airport.name + ' - ' + airport.code%></option>
+            <% }) %>
+          </select>
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-map-marker"></span>
+          </span>
+        </div>
+        <br>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="col-md-4 control-label">Selecciona tu opcion</label>
+      <div class="col-md-8">
+        <div class="radio">
+          <label>
+            <input type="radio" name="optionsRadios" id="full-trip" value="option1" checked="">
+            Ida y vuelta
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="optionsRadios" id="one-way" value="option2">
+            Solo ida
+          </label>
+        </div>
+        <br/>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="select" class="col-md-4 control-label"> ¿En que clase le gustaría viajar?</label>
+      <div class="col-md-8">
+        <select class="form-control" id="fclass" name="fclass">
+            <option selected disabled hidden>Escoja la clase</option>
+            <option value="FC">Primera Clase</option>
+            <option value="TC">Clase Turista</option>
+        </select>
+        <br>
+      </div>
+    </div>
+    
+    
+    <div class="form-group">
+      <label class="col-md-4 control-label">Cuantos adultos van:</label>
+      <div class="col-md-8">
+         <input type="number" class="form-control" id="seats" name="seats" min="1" max="30"/>
+         <br/>
+         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseSeats" aria-expanded="false" aria-controls="collapseExample" id="collapseButton">
+          Otro tipo de asiento
+        </button>
+      </div>
+    </div>
+    
+    
+    
+    <div class="collapse" id="collapseSeats">
+      <div class="well">
+        
+      <div class="form-group">
+        <label class="col-md-4 control-label">Cuantos niños van:</label>
+        <div class="col-md-8">
+           <input type="number" class="form-control" id="seatschild" name="seatschild" min="0" max="9" value="0"/>
+           <br/>
+        </div>
+        </div>
+        
+        <div class="form-group">
+        <label class="col-md-4 control-label">Cuantos bebes van:</label>
+        <div class="col-md-8">
+           <input type="number" class="form-control" id="seatstod" name="seatstod" min="0" max="9" value="0"/>
+        </div>
+      </div>
+        
+        
+        
+        
+      </div>
+    </div>
+    
+ 
+     
+      
+      
+      
+    <div class="form-group">
+      <label class="col-md-4 control-label">Selecciona tu fecha de salida</label>
+      <div class="col-md-8">
+         <div class="input-group" id="datepicker6">
+          <input type="text" class="input-sm form-control" name="startDate" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="col-md-4 control-label">Selecciona tu fecha de retorno</label>
+      <div class="col-md-8">
+         <div class="input-group" id="datepicker7">
+          <input type="text" class="input-sm form-control" name="endDate" id="endDate" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="form-group">
+      <div class="col-sm-offset-4 col-sm-4">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Buscar vuelos</button>
+      </div>
+    </div>
+    
+    
+    </fieldset>
+    </form>
+    
+ 
+ 
+
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    $(document).ready(function() {
+      var d1=new Date();
+      var n = d1.getFullYear();
+      
+      var d2=new Date();
+      var d3= new Date();
+      var d4= new Date();
+      d1.setDate(d1.getDate() + 1);
+      d2.setFullYear(n+1);
+      d3.setDate(d3.getDate() + 3);
+      d4.setFullYear(n+1);
+      
+      $('input[name="startDate"]').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minDate: d1,
+        maxDate: d2
+        });
+      $('input[name="endDate"]').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minDate: d3,
+        maxDate: d4
+        });
+      $('#one-way, #full-trip').click(function() {
+        var oneWay = $('#one-way').prop("checked");
+        $('#endDate').prop('disabled', oneWay);
+         
+      });
+      
+      $('#collapseButton').click(function(){
+        $('#seatschild').val('0');
+        $('#seatstod').val('0');
+      });
+      
+      
+    });
+    
+    
+  </script>
+  
