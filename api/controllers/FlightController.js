@@ -53,6 +53,7 @@ module.exports = {
                                                     arrivals: []
                         });
                     } else {
+                        console.log("departure flights before filter: "+departureFlights.length);
                         departureFlights = departureFlights.filter(function(f) {
                                                 return f.seats.length > totalseats
                                                          }).filter(function(f) {
@@ -62,7 +63,7 @@ module.exports = {
                                                          });
                                                          
 
-                        if (tripOption == "option1") {
+                        if (tripOption == "option2") {
                                 
                             res.view('flight/search', {errors: errorsMsg,
                                                        departures: departureFlights,
@@ -85,6 +86,7 @@ module.exports = {
                                                                         arrivals: []
                                             });
                                         } else {
+                                            console.log("Return flights before filter: "+returnFlights.length);
                                             returnFlights = returnFlights.filter(function(f) {
                                                                 return f.seats.length > totalseats
                                                                          }).filter(function(f) {
