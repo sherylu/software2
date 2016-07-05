@@ -62,12 +62,12 @@ module.exports = {
         if (departureAirport == arrivalAirport) {
             errorsMsg.push('Los aeropuertos de partida y destino no pueden ser los mismos');
         }
-        if (flightDeparture < new Date() || flightArrival < new Date()) {
+        /*if (flightDeparture < new Date() || flightArrival < new Date()) {
             errorsMsg.push('La fecha de salida y llegada no pueden ser menores a la fecha actual');
         }
         if (flightDeparture >= flightArrival) {
             errorsMsg.push('La fecha de partida no puede ser mayor a la de llegada')
-        }
+        }*/
         if (totalseats <= 0) {
             errorsMsg.push('Al menos un ticket debe ser seleccionado');
         }
