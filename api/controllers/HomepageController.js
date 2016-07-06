@@ -8,14 +8,16 @@
 module.exports = {
 	index: function(request, response) {
 		
-		Airport.find().exec(function(err, allAirports){
-	        if(err || allAirports === undefined) {
-	            allAirports = [];
-	        }      
-            return response.view('homepage', {airports: allAirports,
-            	                              errors: []}
-        	);
-	    })
+		Airport.find().exec(
+			function(err, allAirports){
+			
+		        if(err || allAirports === undefined) {
+		            allAirports = [];
+		        }      
+	            return response.view('homepage', {airports: allAirports, errors: []}
+	        	);
+	    	} 
+	    )
 		
 	},
 };

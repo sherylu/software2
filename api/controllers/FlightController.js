@@ -8,6 +8,7 @@
 module.exports = {
     
     search: function(req, res) {
+        
         var departureAirport = req.param('departure');
         var arrivalAirport   = req.param('arrival');
         var tripOption       = req.param('optionsRadios');
@@ -38,7 +39,9 @@ module.exports = {
         } else {
             
         
-        Flight.find({departureDate: { '>=': flightDeparture}}).
+        Flight.find(
+            {
+            departureDate: { '>=': flightDeparture}}).
             populate('seats', {where: {available: true}}).
             populate('departureAirport').
             populate('arrivalAirport').
@@ -54,13 +57,13 @@ module.exports = {
                         });
                     } else {
                         console.log("departure flights before filter: "+departureFlights.length);
-                        /*departureFlights = departureFlights.filter(function(f) {
+                        departureFlights = departureFlights.filter(function(f) {
                                                 return f.seats.length > totalseats
                                                          }).filter(function(f) {
                                                 return f.departureAirport.code == departureAirport             
                                                          }).filter(function(f) {
                                                 return f.arrivalAirport.code == arrivalAirport
-                                                         });*/
+                                                         });
                                                          
 
                         if (tripOption == "option2") {
@@ -87,13 +90,13 @@ module.exports = {
                                             });
                                         } else {
                                             console.log("Return flights before filter: "+returnFlights.length);
-                                            /*returnFlights = returnFlights.filter(function(f) {
+                                            returnFlights = returnFlights.filter(function(f) {
                                                                 return f.seats.length > totalseats
                                                                          }).filter(function(f) {
                                                                 return f.departureAirport.code == arrivalAirport             
                                                                          }).filter(function(f) {
                                                                 return f.arrivalAirport.code == departureAirport
-                                                                         });*/
+                                                                         });
                                             
                                             res.view('flight/search', {errors: errorsMsg,
                                                                        departures: departureFlights,
