@@ -7,30 +7,29 @@
 
 module.exports = {
 
-  attributes: {
-    seatNumber: {
-      type: 'integer',
-      required: true,
-      unique: true
-    },
-    available: {
-      type: 'boolean',
-      defaultsTo: true,
-      required: true
-    },
-    seatType: {
-      type: 'string',
-      enum: ["firstClass", "tourist"],
-    },
-    location: {
-      type: 'string',
-      enum: ["window", "middle", "hallway"],
-      required: true
-    },
-    flights: {
-      collection: 'flight',
-      via: 'flightCode'
+    attributes: {
+        seatNumber: {
+            type: 'integer',
+            required: true,
+            unique: true
+        },
+        available: {
+            type: 'boolean',
+            defaultsTo: true,
+            required: true
+        },
+        seatType: {
+            type: 'string',
+            enum: ["firstClass", "tourist"],
+        },
+        location: {
+            type: 'string',
+            enum: ["window", "middle", "hallway"],
+            required: true
+        },
+        flights: {
+            collection: 'flight',
+            via: 'flightCode'
+        }
     }
-  }
 };
-

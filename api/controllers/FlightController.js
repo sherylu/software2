@@ -1,13 +1,14 @@
 /**
  * FlightController
- *
  * @description :: Server-side logic for managing flights
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
 module.exports = {
 
-    search: function(req, res) {
+    /* SEARCH */
+
+    search: function (req, res) {
 
         var departureAirport = req.param('departure');
         var arrivalAirport = req.param('arrival');
@@ -25,11 +26,10 @@ module.exports = {
 
 
         if (errorsMsg.length > 0) {
-            Airport.find().exec(function(err, allAirports) {
+            Airport.find().exec(function (err, allAirports) {
                 if (err || allAirports === undefined) {
                     allAirports = [];
-                }
-                else {
+                } else {
                     if (req.method === 'GET') {
                         errorsMsg = []
                     }
@@ -39,8 +39,7 @@ module.exports = {
                     });
                 }
             })
-        }
-        else {
+        } else {
 
 
             Flight
@@ -48,16 +47,11 @@ module.exports = {
                     departureDate: {
                         '>=': flightDeparture
                     }
-                }).
-            populate('seats', {
+                }).populate('seats', {
                 where: {
                     available: true
                 }
-            }).
-            populate('departureAirport').
-            populate('arrivalAirport').
-
-            exec(function(err, departureFlights) {
+            }).populate('departureAirport').populate('arrivalAirport').exec(function (err, departureFlights) {
                 if (err) {
                     return res.negotiate(err);
                 }
@@ -68,14 +62,13 @@ module.exports = {
                         departures: [],
                         arrivals: []
                     });
-                }
-                else {
+                } else {
                     console.log("departure flights before filter: " + departureFlights.length);
-                    departureFlights = departureFlights.filter(function(f) {
+                    departureFlights = departureFlights.filter(function (f) {
                         return f.seats.length > totalseats
-                    }).filter(function(f) {
+                    }).filter(function (f) {
                         return f.departureAirport.code == departureAirport
-                    }).filter(function(f) {
+                    }).filter(function (f) {
                         return f.arrivalAirport.code == arrivalAirport
                     });
 
@@ -88,21 +81,16 @@ module.exports = {
                             arrivals: [],
                             oneWay: true
                         });
-                    }
-                    else {
+                    } else {
                         Flight.find({
                             departureDate: {
                                 '>=': flightArrival
                             }
-                        }).
-                        populate('seats', {
+                        }).populate('seats', {
                             where: {
                                 available: true
                             }
-                        }).
-                        populate('departureAirport').
-                        populate('arrivalAirport').
-                        exec(function(err, returnFlights) {
+                        }).populate('departureAirport').populate('arrivalAirport').exec(function (err, returnFlights) {
                             if (err) {
                                 return res.negotiate(err);
                             }
@@ -113,14 +101,13 @@ module.exports = {
                                     departures: departureFlights,
                                     arrivals: []
                                 });
-                            }
-                            else {
+                            } else {
                                 console.log("Return flights before filter: " + returnFlights.length);
-                                returnFlights = returnFlights.filter(function(f) {
+                                returnFlights = returnFlights.filter(function (f) {
                                     return f.seats.length > totalseats
-                                }).filter(function(f) {
+                                }).filter(function (f) {
                                     return f.departureAirport.code == arrivalAirport
-                                }).filter(function(f) {
+                                }).filter(function (f) {
                                     return f.arrivalAirport.code == departureAirport
                                 });
 
@@ -137,6 +124,52 @@ module.exports = {
 
             });
         }
-    }
+    },
 
-};
+
+
+    /* BOOKING */
+
+    booking: function (req, res) {
+
+        var leavingFlightCode = req.param('selectedRowLeaving');
+        var returningFlightCode = req.param('selectedRowReturning');
+
+        console.log(leavingFlightCode);
+        console.log(returningFlightCode);
+
+        return res.view('flight/bookingflight', {
+            errors: [],
+            flightCodeLeaving: leavingFlightCode,
+            flightCodeReturning: returningFlightCode
+        });
+
+    },
+
+
+
+    /*SENDBOOKINGMAIL*/
+
+    sendbookingmail: function (req, res) {
+
+        var client = req.param('obj');
+        console.log('En metodo final:');
+        console.log(client);
+        client.subject = 'RESERVA DE VUELO';
+
+        sails.hooks.email.send(
+            'bookingEmail',
+            {
+                name: client.firstName
+            },
+            {
+                to: client.email,
+                subject: client.subject
+            },
+            function (err) {
+                console.log(err || 'Mail Sent !');
+            }
+        )
+    }
+}
+;

@@ -7,28 +7,27 @@
 
 module.exports = {
 
-  attributes: {
-    quantity: {
-      type: 'integer',
-      required: true
-    },
-    state: {
-      type: 'string',
-      enum: ["Payment Pending", "Payed", "Cancelled"],
-      defaultsTo: "Payment Pending",
-      required: true
-    },
-    creationDate: {
-      type: 'datetime',
-      required: true
-    },
-    code: {
-      type: 'integer',
-      autoIncrement: true
-    },
-    owner: {
-      model: 'client'
+    attributes: {
+        quantity: {
+            type: 'integer',
+            required: true
+        },
+        state: {
+            type: 'string',
+            enum: ["Payment Pending", "Payed", "Cancelled"],
+            defaultsTo: "Payment Pending",
+            required: true
+        },
+        creationDate: {
+            type: 'datetime',
+            required: true
+        },
+        code: {
+            type: 'integer',
+            autoIncrement: true
+        },
+        owner: {
+            model: 'client'
+        }
     }
-  }
 };
-
