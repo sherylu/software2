@@ -1,110 +1,140 @@
 <%- include ../partials/banner.ejs %>
 
 <% var toMyDate = function(d) {
-     return d.toLocaleDateString() + ' - ' + d.toLocaleTimeString(); 
-   }
+    return d.toLocaleDateString() + ' - ' + d.toLocaleTimeString();
+}
 %>
 
 <style>
     .selected-row {
-        color: #fff !important;
-        background-color: #d34615 !important;
+        color: #060606 !important;
+        background-color: #536acc !important;
     }
+
 </style>
 
-
 <div class="container">
-    
+
     <div class="row">
         <div class="col-md-8">
             <%- include ../partials/error.ejs %>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12">
             <h2>Vuelos de Ida</h2>
             <table class="table table-striped" id="leaving">
                 <thead>
-                    <tr>
-                        <th>Codigo</th>
-                        <th>Fecha y Hora de Salida</th>
-                        <th>Fecha y Hora de LLegada</th>
-                        <th>Lugar de Salida</th>
-                        <th>Lugar de Llegada</th>
-                        <th>Asientos Disponibles</th>
-                    </tr>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Fecha y Hora de Salida</th>
+                    <th>Fecha y Hora de LLegada</th>
+                    <th>Lugar de Salida</th>
+                    <th>Lugar de Llegada</th>
+                    <th>Asientos Disponibles</th>
+                </tr>
                 </thead>
                 <tbody>
-                    
-                    <% _.each(departures, function(departure) { %>
-                        <tr>
-                            <td><%=departure.flightCode%></td>
-                            <td><%=toMyDate(departure.departureDate)%></td>
-                            <td><%=toMyDate(departure.arrivalDate)%></td>
-                            <td><%=departure.departureAirport.code%></td>
-                            <td><%=departure.arrivalAirport.code%></td>
-                            <td><%=departure.seats.length%></td>
-                        </tr>
-                    <% }) %>
-                    
+
+                <% _.each(departures, function(departure) { %>
+                <tr>
+                    <td><%=departure.flightCode%></td>
+                    <td><%=toMyDate(departure.departureDate)%></td>
+                    <td><%=toMyDate(departure.arrivalDate)%></td>
+                    <td><%=departure.departureAirport.code%></td>
+                    <td><%=departure.arrivalAirport.code%></td>
+                    <td><%=departure.seats.length%></td>
+                </tr>
+                <% }) %>
+
                 </tbody>
             </table>
         </div>
     </div>
-    
+
     <div class="row">
-        <div class="col-md-12" >
-            
+        <div class="col-md-12">
+
             <h2>Vuelos de Regreso</h2>
             <table class="table table-striped" id="returning">
                 <thead>
-                    <tr>
-                        <th>Codigo</th>
-                        <th>Fecha y Hora de Salida</th>
-                        <th>Fecha y Hora de LLegada</th>
-                        <th>Lugar de Salida</th>
-                        <th>Lugar de Llegada</th>
-                        <th>Asientos Disponibles</th>
-                    </tr>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Fecha y Hora de Salida</th>
+                    <th>Fecha y Hora de LLegada</th>
+                    <th>Lugar de Salida</th>
+                    <th>Lugar de Llegada</th>
+                    <th>Asientos Disponibles</th>
+                </tr>
                 </thead>
                 <tbody>
-                    
-                    <% _.each(arrivals, function(arrival) { %>
-                        <tr>
-                            <td><%=arrival.flightCode%></td>
-                            <td><%=toMyDate(arrival.departureDate)%></td>
-                            <td><%=toMyDate(arrival.arrivalDate)%></td>
-                            <td><%=arrival.departureAirport.code%></td>
-                            <td><%=arrival.arrivalAirport.code%></td>
-                            <td><%=arrival.seats.length%></td>
-                        </tr>
-                    <% }) %>
-                    
+
+                <% _.each(arrivals, function(arrival) { %>
+                <tr>
+                    <td><%=arrival.flightCode%></td>
+                    <td><%=toMyDate(arrival.departureDate)%></td>
+                    <td><%=toMyDate(arrival.arrivalDate)%></td>
+                    <td><%=arrival.departureAirport.code%></td>
+                    <td><%=arrival.arrivalAirport.code%></td>
+                    <td><%=arrival.seats.length%></td>
+                </tr>
+                <% }) %>
+
                 </tbody>
             </table>
-            
-            
+
         </div>
     </div>
 </div>
 
+<br><br>
+
+<div class="form-group">
+    <div class="col-sm-offset-4 col-sm-4">
+        <button class="btn btn-primary btn-lg btn-block" id="btn-continue">Continuar</button>
+    </div>
+</div>
+
 <script>
-    
+
     $(document).ready(function() {
-        $('#leaving > tbody > tr').click(function() {
-           $('#leaving >tbody > tr').removeClass('selected-row');
-           $(this).addClass('selected-row');
+
+        $('#leaving').find('> tbody > tr').click(function() {
+            $('#leaving').find('>tbody > tr').removeClass('selected-row');
+            $(this).addClass('selected-row');
         });
-        $('#returning > tbody > tr').click(function() {
-           $('#returning > tbody > tr').removeClass('selected-row');
-           $(this).addClass('selected-row');
+        $('#returning').find('> tbody > tr').click(function() {
+            $('#returning').find('> tbody > tr').removeClass('selected-row');
+            $(this).addClass('selected-row');
         });
-        $('#leaving > tbody > tr.selected-row').click(function() {
-            $('#leaving > tbody > tr.selected-row').removeClass('selected-row');
+        $('#leaving').find('> tbody > tr.selected-row').click(function() {
+            $('#leaving').find('> tbody > tr.selected-row').removeClass('selected-row');
         });
-        $('#returning > tbody > tr.selected-row').click(function() {
-            $('#returning > tbody > tr.selected-row').removeClass('selected-row');
+        $('#returning').find('> tbody > tr.selected-row').click(function() {
+            $('#returning').find('> tbody > tr.selected-row').removeClass('selected-row');
         });
+
+
+
+
+
+        $("#btn-continue").click(function() {
+            var leavingCode = $('#leaving > tbody > tr.selected-row > td:nth-child(1)').text();
+            var returningCode = $('#returning> tbody > tr.selected-row > td:nth-child(1)').text();
+
+            $('body').append($('<form/>')
+                    .attr({'action': '/flight/booking', 'method': 'post', 'id': 'replacer'})
+                    .append($('<input/>')
+                            .attr({'type': 'hidden', 'name': 'selectedRowLeaving', 'value': leavingCode})
+                    )
+                    .append($('<input/>')
+                            .attr({'type': 'hidden', 'name': 'param2', 'selectedRowReturning': returningCode})
+                    )
+            ).find('#replacer').submit();
+
+        });
+
+
     });
 </script>

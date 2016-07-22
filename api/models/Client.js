@@ -7,35 +7,39 @@
 
 module.exports = {
 
-  attributes: {
-    firstName: {
-      type: 'string',
-      size: 128,
-      required: true
-    },
-    lastName: {
-      type: 'string',
-      size: 128,
-      required: true
-    },
-    passportId: {
-      type: 'string',
-      size: 30,
-      required: true
-    },
-    phoneNumber: {
-      type: 'string',
-      size: 20,
-      required: true
-    },
-    handicap: {
-      type: 'float',
-      required: true
-    },
-    reservations: {
-      collection: 'reservation',
-      via: 'owner'
+    attributes: {
+        firstName: {
+            type: 'string',
+            size: 128,
+            required: true
+        },
+        lastName: {
+            type: 'string',
+            size: 128,
+            required: true
+        },
+        passportId: {
+            type: 'string',
+            size: 30,
+            required: true
+        },
+        phoneNumber: {
+            type: 'string',
+            size: 20,
+            required: true
+        },
+        email: {
+            type: 'string',
+            email: 'true',
+            required: true
+        },
+        handicap: {
+            type: 'float',
+            required: true
+        },
+        reservations: {
+            collection: 'reservation',
+            via: 'owner'
+        }
     }
-  }
 };
-

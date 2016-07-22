@@ -7,21 +7,20 @@
 
 module.exports = {
 
-  attributes: {
-    name: {
-      type: 'string',
-      required: true
-    },
-    city: {
-      type: 'string',
-      required: true
-    },
-    code: {
-      type: 'string',
-      size: 3,
-      required: true,
-      unique: true
+    attributes: {
+        name: {
+            type: 'string',
+            required: true
+        },
+        city: {
+            type: 'string',
+            required: true
+        },
+        code: {
+            type: 'string',
+            size: 3,
+            required: true,
+            unique: true
+        }
     }
-  }
 };
-
