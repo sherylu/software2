@@ -31,6 +31,9 @@ module.exports = {
         email: {
             type: 'string',
             email: 'true',
+        },
+        age: {
+            type:'integer',
             required: true
         },
         handicap: {

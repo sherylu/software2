@@ -9,99 +9,61 @@
             </div>
         </div>
 
-        <div class="panel panel-primary">
+            <%- include partials/client.ejs %>
+            
+            <% for (var i=1; i<seats; i++) { %>
+                <%- include partials/passenger.ejs %>
+            <% } %> 
 
-            <div class="panel-heading">
-                <h3 class="panel-title">Ingrese los datos del cliente</h3>
-            </div>
-
-            <div class="panel-body">
-
-
-                <form class="form-horizontal">
-                    <fieldset>
-
-                        <!--NOMBRES-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Nombres:</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="firstName"/>
-                            </div>
-                        </div>
-
-                        <br>
-
-
-                        <!--APELLIDOS-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Apellidos:</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="lastName"/>
-                            </div>
-                        </div>
-
-                        <br>
-
-                        <!--IDENTIFICACION-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Identificacion:</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="identification"/>
-                            </div>
-                        </div>
-
-                        <br>
-
-                        <!--TELEFONO-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Número de teléfono:</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="phone"/>
-                            </div>
-                        </div>
-
-                        <br>
-
-                        <!--EMAIl-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Email:</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="email"/>
-                            </div>
-                        </div>
-
-
-                        <br>
-
-                        <!--RESERVAR VUELO-->
-                        <div class="form-group">
-                            <div class="col-sm-offset-4 col-sm-4">
-                                <button class="btn btn-primary btn-lg btn-block" id="btn-booking">Reservar vuelo
-                                </button>
-                            </div>
-                        </div>
-
-                    </fieldset>
-                </form>
-
-            </div>
         </div>
     </div>
 
     <script>
         $(document).ready(function () {
-
-            $('#btn-booking').click(function () {
-
+            
+            var retrieveClient = function() {
                 var client = {};
                 client.firstName = $('#firstName').val();
                 client.lastName = $('#lastName').val();
-                client.id = $('#identification').val();
-                client.phone = $('#phone').val();
+                client.passportId = $('#identification').val();
+                client.phoneNumber = $('#phone').val();
                 client.email = $('#email').val();
+                client.age = $('#age').val();
+                client.handicap = $('#handicapped').prop('checked')? $('#handicap').val() : 0;
+                return client;
+            }
+            
+            var retrievePassengers = function(n) {
+                var passengers = [];
+                for (var i=1; i<seats; i++) {
+                    var passenger = {};
+                    passenger.firstName = $('#firstName'+i).val();
+                    passenger.lastName = $('#lastName'+i).val();
+                    passenger.passportId = $('#identification'+i).val();
+                    passenger.phoneNumber ="";
+                    passenger.email = "";
+                    passenger.age = $('#age'+i).val();
+                    passenger.handicap = $('#handicapped'+i).prop('checked')? $('#handicap'+i).val() : 0
+                    passengers.push(passenger);
+                }
+                return passengers;
+            }
+
+            $('#btn-booking').click(function () {
+
+                
+                var clients = [];
+                
+                clients.push(retrieveClient());
+                
+                passengers = retrievePassengers(<%=seats%>);
+                clients = clients.concat(passengers);
+                
+                
 
                 $.post("/flight/sendbookingmail", {
-                    obj: client
+                    obj: clients,
+                    reservation: [flightCodeLeaving, flightCodeReturning]
                 });
 
             });
