@@ -60,7 +60,8 @@ module.exports = {
                     res.view('flight/search', {
                         errors: errorsMsg,
                         departures: [],
-                        arrivals: []
+                        arrivals: [],
+                        numberOfSeats: totalseats
                     });
                 } else {
                     console.log("departure flights before filter: " + departureFlights.length);
@@ -79,7 +80,8 @@ module.exports = {
                             errors: errorsMsg,
                             departures: departureFlights,
                             arrivals: [],
-                            oneWay: true
+                            oneWay: true,
+                            numberOfSeats: totalseats
                         });
                     } else {
                         Flight.find({
@@ -99,7 +101,8 @@ module.exports = {
                                 res.view('flight/search', {
                                     errors: errorsMsg,
                                     departures: departureFlights,
-                                    arrivals: []
+                                    arrivals: [],
+                                    numberOfSeats: totalseats
                                 });
                             } else {
                                 console.log("Return flights before filter: " + returnFlights.length);
@@ -115,6 +118,7 @@ module.exports = {
                                     errors: errorsMsg,
                                     departures: departureFlights,
                                     arrivals: returnFlights,
+                                    numberOfSeats: totalseats
                                 });
                             }
                         });
@@ -134,14 +138,17 @@ module.exports = {
 
         var leavingFlightCode = req.param('selectedRowLeaving');
         var returningFlightCode = req.param('selectedRowReturning');
+        var numberOfSeats = parseInt(req.param('numberOfSeats'));
 
         console.log(leavingFlightCode);
         console.log(returningFlightCode);
+        console.log(numberOfSeats);
 
         return res.view('flight/bookingflight', {
             errors: [],
             flightCodeLeaving: leavingFlightCode,
-            flightCodeReturning: returningFlightCode
+            flightCodeReturning: returningFlightCode,
+            seats: numberOfSeats
         });
 
     },
@@ -152,9 +159,17 @@ module.exports = {
 
     sendbookingmail: function (req, res) {
 
-        var client = req.param('obj');
+        var clients = req.param('obj');
+        var client = clients[0];
         console.log('En metodo final:');
         console.log(client);
+        
+        
+        Client.create(clients).exec(function(err, savedClients) {
+           console.log(length(savedClients) + 'Saved Clients'); 
+        });
+        
+        /*SEND EMAIL*/
         client.subject = 'RESERVA DE VUELO';
 
         sails.hooks.email.send(

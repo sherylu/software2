@@ -20,6 +20,12 @@
             <%- include ../partials/error.ejs %>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <p style="background-color: #5bc0de">Número de Asientos: <b id="seats"><%=numberOfSeats%></b></p>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -122,6 +128,7 @@
         $("#btn-continue").click(function() {
             var leavingCode = $('#leaving > tbody > tr.selected-row > td:nth-child(1)').text();
             var returningCode = $('#returning> tbody > tr.selected-row > td:nth-child(1)').text();
+            var numberOfSeats = $('#seats').text();
 
             $('body').append($('<form/>')
                     .attr({'action': '/flight/booking', 'method': 'post', 'id': 'replacer'})
@@ -129,7 +136,10 @@
                             .attr({'type': 'hidden', 'name': 'selectedRowLeaving', 'value': leavingCode})
                     )
                     .append($('<input/>')
-                            .attr({'type': 'hidden', 'name': 'param2', 'selectedRowReturning': returningCode})
+                            .attr({'type': 'hidden', 'name': 'selectedRowReturning', 'value': returningCode})
+                    )
+                    .append($('<input/>')
+                            .attr({'type': 'hidden', 'name': 'numberOfSeats', 'value': numberOfSeats})
                     )
             ).find('#replacer').submit();
 
