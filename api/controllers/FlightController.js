@@ -160,31 +160,61 @@ module.exports = {
     sendbookingmail: function (req, res) {
 
         var clients = req.param('obj');
+        var seats = parseInt(req.param('numberOfSeats'));
+        var fligthCodes = req.param('reservation');
+        
+        console.log('obj:');
+        console.log(clients);
+        console.log('seats:');
+        console.log(seats);
+        console.log('reservation');
+        console.log(fligthCodes);
+        
         var client = clients[0];
         console.log('En metodo final:');
         console.log(client);
         
+        var reservation = { quantity: seats,
+                            creationDate: new Date()
+                          }
+        
+        var reservations = fligthCodes.map(function(code) {
+                                var fReservation = reservation;
+                                fReservation.fligthCode = code;
+                                return fReservation; 
+                            });
+                            
+        clients = clients.map(function(client) {
+           var lClient = client;
+           lClient.reservations = reservations;
+           return lClient;
+        });
         
         Client.create(clients).exec(function(err, savedClients) {
+            
+            /*SEND EMAIL*/
+            client.subject = 'RESERVA DE VUELO';
+    
+            sails.hooks.email.send(
+                'bookingEmail',
+                {
+                    name: client.firstName
+                },
+                {
+                    to: client.email,
+                    subject: client.subject
+                },
+                function (err) {
+                    console.log(err || 'Mail Sent !');
+                }
+            );
+            
+            res.view('/flight/confirmation', {});
+        
            console.log(length(savedClients) + 'Saved Clients'); 
         });
         
-        /*SEND EMAIL*/
-        client.subject = 'RESERVA DE VUELO';
-
-        sails.hooks.email.send(
-            'bookingEmail',
-            {
-                name: client.firstName
-            },
-            {
-                to: client.email,
-                subject: client.subject
-            },
-            function (err) {
-                console.log(err || 'Mail Sent !');
-            }
-        )
+        
     }
 }
 ;
