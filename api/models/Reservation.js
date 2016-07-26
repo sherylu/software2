@@ -26,6 +26,10 @@ module.exports = {
             type: 'integer',
             autoIncrement: true
         },
+        flightCode: {
+            type: 'string',
+            required: true
+        },
         owner: {
             model: 'client'
         }
