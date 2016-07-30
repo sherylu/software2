@@ -18,12 +18,11 @@ module.exports = {
         var seatToddler = parseInt(req.param('seatstod'));
         var flightDeparture = new Date(req.param('startDate'));
         var flightArrival = new Date(req.param('endDate'));
+        var seatClass = req.param('fclass');
         var totalseats = seatAdult + seatChild;
 
-        //TODO: validate request method
         var values = req.allParams();
         var errorsMsg = Flight.validateForm(values);
-
 
         if (errorsMsg.length > 0) {
             Airport.find().exec(function (err, allAirports) {
@@ -61,7 +60,8 @@ module.exports = {
                         errors: errorsMsg,
                         departures: [],
                         arrivals: [],
-                        numberOfSeats: totalseats
+                        oneWay: true,
+                        numberOfSeats: [seatAdult, seatChild, seatToddler],
                     });
                 } else {
                     console.log("departure flights before filter: " + departureFlights.length);
@@ -81,7 +81,7 @@ module.exports = {
                             departures: departureFlights,
                             arrivals: [],
                             oneWay: true,
-                            numberOfSeats: totalseats
+                            numberOfSeats: [seatAdult, seatChild, seatToddler]
                         });
                     } else {
                         Flight.find({
@@ -102,7 +102,8 @@ module.exports = {
                                     errors: errorsMsg,
                                     departures: departureFlights,
                                     arrivals: [],
-                                    numberOfSeats: totalseats
+                                    oneWay: false,
+                                    numberOfSeats: [seatAdult, seatChild, seatToddler]
                                 });
                             } else {
                                 console.log("Return flights before filter: " + returnFlights.length);
@@ -113,12 +114,13 @@ module.exports = {
                                 }).filter(function (f) {
                                     return f.arrivalAirport.code == departureAirport
                                 });*/
-
+                                
                                 res.view('flight/search', {
                                     errors: errorsMsg,
                                     departures: departureFlights,
                                     arrivals: returnFlights,
-                                    numberOfSeats: totalseats
+                                    oneWay: false,
+                                    numberOfSeats: [seatAdult, seatChild, seatToddler]
                                 });
                             }
                         });
@@ -138,17 +140,22 @@ module.exports = {
 
         var leavingFlightCode = req.param('selectedRowLeaving');
         var returningFlightCode = req.param('selectedRowReturning');
-        var numberOfSeats = parseInt(req.param('numberOfSeats'));
+        var adultSeats = parseInt(req.param('adultSeats'));
+        var childSeats = parseInt(req.param('childSeats'));
+        var todSeats   = parseInt(req.param('todSeats'));
+        var oneWay = req.param('oneWay');
+        
 
-        console.log(leavingFlightCode);
-        console.log(returningFlightCode);
-        console.log(numberOfSeats);
+        console.log(req.allParams());
 
         return res.view('flight/bookingflight', {
             errors: [],
             flightCodeLeaving: leavingFlightCode,
             flightCodeReturning: returningFlightCode,
-            seats: numberOfSeats
+            adultSeats: adultSeats,
+            childSeats: childSeats,
+            todSeats: todSeats,
+            oneWay: oneWay
         });
 
     },
