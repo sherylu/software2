@@ -23,14 +23,29 @@
     
     <div class="row">
         <div class="col-md-3">
-            <p style="background-color: #5bc0de">Número de Asientos: <b id="seats"><%=numberOfSeats%></b></p>
+            <div class="alert alert-info" role="alert">
+                <table class="table table-hover">
+                    <tr>
+                        <td># Pasajeros adultos:</td>
+                        <td><span id="adultSeats"><%=numberOfSeats[0]%></span> <span class="glyphicon glyphicon-user"></span></td>
+                    </tr>
+                    <tr>
+                        <td># Pasajeros niños:</td>
+                        <td><span id="childSeats"><%=numberOfSeats[1]%></span> <span class="glyphicon glyphicon-user"></span></td>
+                    </tr>
+                    <tr>
+                        <td># Pasajeros bebes:</td>
+                        <td><span id="todSeats"><%=numberOfSeats[2]%></span> <span class="glyphicon glyphicon-user"></span></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <h2>Vuelos de Ida</h2>
-            <table class="table table-striped" id="leaving">
+            <h2>Vuelos de Ida <span class="glyphicon glyphicon-plane"></span></h2>
+            <table class="table table-striped table-hover" id="leaving">
                 <thead>
                 <tr>
                     <th>Codigo</th>
@@ -60,37 +75,44 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-
-            <h2>Vuelos de Regreso</h2>
-            <table class="table table-striped" id="returning">
-                <thead>
-                <tr>
-                    <th>Codigo</th>
-                    <th>Fecha y Hora de Salida</th>
-                    <th>Fecha y Hora de LLegada</th>
-                    <th>Lugar de Salida</th>
-                    <th>Lugar de Llegada</th>
-                    <th>Asientos Disponibles</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <% _.each(arrivals, function(arrival) { %>
-                <tr>
-                    <td><%=arrival.flightCode%></td>
-                    <td><%=toMyDate(arrival.departureDate)%></td>
-                    <td><%=toMyDate(arrival.arrivalDate)%></td>
-                    <td><%=arrival.departureAirport.code%></td>
-                    <td><%=arrival.arrivalAirport.code%></td>
-                    <td><%=arrival.seats.length%></td>
-                </tr>
-                <% }) %>
-
-                </tbody>
-            </table>
-
-        </div>
+        <% if (!oneWay) { %>
+            <div class="col-md-12">
+    
+                <h2>Vuelos de Regreso <span class="glyphicon glyphicon-plane"></span></h2>
+                <table class="table table-striped table-hover" id="returning">
+                    <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Fecha y Hora de Salida</th>
+                        <th>Fecha y Hora de LLegada</th>
+                        <th>Lugar de Salida</th>
+                        <th>Lugar de Llegada</th>
+                        <th>Asientos Disponibles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+    
+                    <% _.each(arrivals, function(arrival) { %>
+                    <tr>
+                        <td><%=arrival.flightCode%></td>
+                        <td><%=toMyDate(arrival.departureDate)%></td>
+                        <td><%=toMyDate(arrival.arrivalDate)%></td>
+                        <td><%=arrival.departureAirport.code%></td>
+                        <td><%=arrival.arrivalAirport.code%></td>
+                        <td><%=arrival.seats.length%></td>
+                    </tr>
+                    <% }) %>
+    
+                    </tbody>
+                </table>
+    
+            </div>
+        <% } else { %>
+            
+            <div class="alert alert-warning" role="alert">No se seleccionó la opción de vuelos de regreso</div>
+        
+        <% } %>
+        
     </div>
 </div>
 
@@ -128,7 +150,11 @@
         $("#btn-continue").click(function() {
             var leavingCode = $('#leaving > tbody > tr.selected-row > td:nth-child(1)').text();
             var returningCode = $('#returning> tbody > tr.selected-row > td:nth-child(1)').text();
-            var numberOfSeats = $('#seats').text();
+            var oneWay = <%=oneWay%>;
+            var adultSeats = $('#adultSeats').text();
+            var childSeats = $('#childSeats').text();
+            var todSeats = $('#todSeats').text();
+            
 
             $('body').append($('<form/>')
                     .attr({'action': '/flight/booking', 'method': 'post', 'id': 'replacer'})
@@ -139,7 +165,16 @@
                             .attr({'type': 'hidden', 'name': 'selectedRowReturning', 'value': returningCode})
                     )
                     .append($('<input/>')
-                            .attr({'type': 'hidden', 'name': 'numberOfSeats', 'value': numberOfSeats})
+                            .attr({'type': 'hidden', 'name': 'adultSeats', 'value': adultSeats})
+                    )
+                    .append($('<input/>')
+                            .attr({'type': 'hidden', 'name': 'childSeats', 'value': childSeats})
+                    )
+                    .append($('<input/>')
+                            .attr({'type': 'hidden', 'name': 'todSeats', 'value': todSeats})
+                    )
+                    .append($('<input/>')
+                            .attr({'type': 'hidden', 'name': 'oneWay', 'value': oneWay})
                     )
             ).find('#replacer').submit();
 
