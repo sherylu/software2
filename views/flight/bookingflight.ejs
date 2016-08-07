@@ -99,7 +99,7 @@
                     client.phoneNumber = $('#phone').val();
                     client.email = $('#email').val();
                     client.age = parseInt($('#age').val());
-                    client.handicap = $('#handicapped').prop('checked')? parseFloat($('#handicap')).val() : 0;
+                    client.handicap = $('#handicapped').prop('checked')? parseFloat($('#handicap').val()) : 0;
                     var errors = validateClient(client);
                     if (errors.length > 0) { validationErrors.push("Errores hallados en el cliente"); }
                     validationErrors = validationErrors.concat(errors);

@@ -1,32 +1,37 @@
 <%- include ../partials/banner.ejs %>
 
+<div class="container">
 <div class="col-md-8">
-  <div class="jumbotron">
+  <div class="alert alert-info">
       <h1>Reserva Exitosa</h1>
-      <p>Su reserva ha sido registrada exitosamente en el sistema</p>
-      <p><b>Codigo de Vuelo: </b>
+      <p><b>Su reserva ha sido registrada exitosamente en el sistema</b></p>
+      <h3>Codigo de Vuelo: </h3>
+      <p>
         <ul>
           <% _.each(reservations, function(reservation) { %>
             <li><%=reservation.flightCode%></li>  
           <% }) %>
         </ul>
       </p>
+      <h3>Codigo de Reserva: </h3>
       <p>
-      <b>Codigo de Reserva: </b>
         <ul>
           <%_.each(reservations, function(reservation) {%>
             <li>Codigo: <b><%=reservation.code%></b></li>
           <% }) %>
         </ul>
       </p>
+      <h3>Pasajeros Registrados: </h3>
       <p>
-      <b>Pasajeros Registrados: </b>
         <ul>
           <%_.each(clients, function(client) {%>
             <li>Nombre: <b><%=client.firstName+' '+client.lastName%></b></li>
           <% }) %>
         </ul>
       </p>
-      <p><a class="btn btn-primary btn-lg" href="/" role="button">Regresar al inicio</a></p>
+      
+      <br><br>
+      <p><a class="btn btn-primary btn-lg btn-block" href="/" role="button">Regresar al inicio</a></p>
     </div>
+</div>
 </div>
