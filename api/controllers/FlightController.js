@@ -165,108 +165,74 @@ module.exports = {
     /*SENDBOOKINGMAIL*/
 
     sendbookingmail: function (req, res) {
+        
 
-        var clients = req.param('obj');
-        var seats = parseInt(req.param('numberOfSeats'));
-        var fligthCodes = req.param('reservation');
+        var myData = JSON.parse(req.param('data'));
         
-        console.log('obj:');
-        console.log(clients);
-        console.log('seats:');
-        console.log(seats);
-        console.log('reservation');
-        console.log(fligthCodes);
-        
+
+        var clients = myData.obj;
+        var seats = myData.numberOfSeats;
+        var fligthCodes = myData.reservation;
         var client = clients[0];
-        console.log('En metodo final:');
-        console.log(client);
-        
-        
+
         var reservation = { quantity: seats,
-                            creationDate: new Date()
+                            creationDate: new Date(),
+                            state: "Payment Pending"
                           }
         
-        var reservations = fligthCodes.map(function(code) {
-                                var fReservation = reservation;
-                                fReservation.flightCode = code;
-                                fReservation.code = Math.floor((Math.random() * 1000) + 1);
-                                return fReservation; 
+        var reservations =  fligthCodes.map(function(code) {
+                                var newReservation = reservation;
+                                newReservation.flightCode = code;
+                                return newReservation; 
                             });
                             
-         console.log('RESERVATIONS');
-            console.log(reservations);
-                            
-        clients = clients.map(function(client) {
-           var lClient = client;
-           lClient.reservations = reservations;
-           console.log(lClient.name);
-           console.log(lClient.reservations);
-           return lClient;
-        });
-        
-        console.log('CLIENTEZs:');
-        console.log(clients);
-        
-        client.subject = 'RESERVA DE VUELO';
 
-        sails.hooks.email.send(
-            'bookingEmail',
-            {
-                name: client.firstName
-            },
-            {
-                to: client.email,
-                subject: client.subject
-            },
-            function (err) {
-                console.log(err || 'Mail Sent !');
-            }
-        )
-        
-        
-         return res.view('flight/confirmation', {fligthCodes: fligthCodes,
-                                                        reservations: reservations,
-                                                        clients: clients});
-        
-        /*Client.create(clients).exec(function(err, savedClients) {
-            console.log(savedClients);
-
-            
-            if (err) {
-                return res.view('500');
-            }
-            
-            
-            console.log('RESERVATIONS');
-            console.log(reservations);
-            
-            console.log('SAVED CLIETNS');
-            console.log(savedClients);
-            
-            Reservation.create(reservations).exec(function(err, savedReservations) {
-                if (err) {
-                    console.log('ERROR:');
-                    console.log(err);
-                }
+        Reservation.create(reservations)
+            .then(function(persistedReservations){
                 
-                console.log('in reservation');
+                clients = clients.map(function(client) {
+                    var newClient = client;
+                    newClient.reservations = persistedReservations;
+                    return newClient;
+                });
+                
+                var passportIds = clients.map(function(client) {
+                    return {passportId: client.passportId}
+                });
                 
                 
-                
-                console.log(savedClients.length + ' Saved Clients'); 
-                console.log("CONSOLE CODES");
-                console.log(fligthCodes);
-                return res.view('flight/confirmation', {fligthCodes: fligthCodes,
-                                                        reservations: reservations,
-                                                        clients: clients});
+                Client.findOrCreate(passportIds, clients)
+                    .then(function(persistedClients) {
+                        
+                        client.subject = 'RESERVA DE VUELO';
+                        sails.hooks.email.send(
+                            'bookingEmail',
+                            {
+                                name: client.firstName
+                            },
+                            {
+                                to: client.email,
+                                subject: client.subject
+                            },
+                            function (err) {
+                                console.log(err || 'Mail Sent !');
+                            }
+                        );
+                        
+                        
+                        return res.view('flight/confirmation', { reservations: persistedReservations,
+                                                          clients: persistedClients
+                                                         });
                     
+                    })
+                    .catch(function(err) {
+                        res.serverError(err);
+                    });
+                
+            })
+            .catch(function(err) {
+                res.serverError(err);
             });
-            
-            
-        
-            
-        });*/
-        
         
     }
 }
