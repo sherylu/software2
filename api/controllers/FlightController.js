@@ -190,9 +190,17 @@ module.exports = {
         Reservation.create(reservations)
             .then(function(persistedReservations){
                 
+                console.log('Persisted reservation');
+                console.log(persistedReservations);
+                console.log('tipo: ');
+                console.log(typeof persistedReservations);
+                console.log('==========================');
+                
                 clients = clients.map(function(client) {
                     var newClient = client;
                     newClient.reservations = persistedReservations;
+                    console.log(newClient);
+                    console.log('==========');
                     return newClient;
                 });
                 
