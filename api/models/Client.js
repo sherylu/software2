@@ -26,7 +26,6 @@ module.exports = {
         phoneNumber: {
             type: 'string',
             size: 20,
-            required: true
         },
         email: {
             type: 'string',

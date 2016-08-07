@@ -27,6 +27,21 @@
     <script>
         $(document).ready(function () {
             
+            function read_cookie(name) {
+                var result = document.cookie.match(new RegExp(name + '=([^;]+)'));
+                result && (result = JSON.parse(result[1]));
+                return result;
+            }
+            
+            function bake_cookie(name, value) {
+              var cookie = [name, '=', JSON.stringify(value), '; domain=.', window.location.host.toString(), '; path=/;'].join('');
+              document.cookie = cookie;
+            }
+            
+            function delete_cookie(name) {
+              document.cookie = [name, '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; domain=.', window.location.host.toString()].join('');
+            }
+                                    
             $('form').on('submit', function(e) {
                   e.preventDefault();
             });
@@ -120,12 +135,32 @@
                 clients = clients.concat(passengers);
 
                 if (validationErrors.length == 0 ) {
-    
-                    $.post("/flight/sendbookingmail", {
+                    
+                    var myData = {
                         obj: clients,
                         reservation: [<%-'\"'+flightCodeLeaving+'\"'%> <%-flightCodeReturning == undefined? (',\"' + flightCodeReturning +'\"') : ''%>],
                         numberOfSeats: <%=adultSeats%>
-                    }, function(data) { $('body').html(data); }); 
+                    }
+                    
+                    
+                    $('body').append($('<form/>')
+                            .attr({'action': '/flight/sendbookingmail', 'method': 'post', 'id': 'replacer'})
+                            .append($('<input/>')
+                                    .attr({'type': 'hidden', 'name': 'data', 'value': JSON.stringify(myData)})
+                            )
+                         
+                    ).find('#replacer').submit();
+                            
+                            
+                    
+                    
+                    
+                    /*alert(JSON.stringify(myData));
+                    //document.cookie = "data="+JSON.stringify(myData)+y;
+                    bake_cookie('form', myData);
+                    
+                    document.location = "/flight/sendbookingmail";*/
+    
                 } else {
                     $('body > div.container > div > div.row > div > div').show();
                     var formErrors = validationErrors.map(function(e) {
