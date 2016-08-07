@@ -26,33 +26,28 @@
 
     <script>
         $(document).ready(function () {
-            
-            function read_cookie(name) {
-                var result = document.cookie.match(new RegExp(name + '=([^;]+)'));
-                result && (result = JSON.parse(result[1]));
-                return result;
-            }
-            
-            function bake_cookie(name, value) {
-              var cookie = [name, '=', JSON.stringify(value), '; domain=.', window.location.host.toString(), '; path=/;'].join('');
-              document.cookie = cookie;
-            }
-            
-            function delete_cookie(name) {
-              document.cookie = [name, '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; domain=.', window.location.host.toString()].join('');
-            }
                                     
             $('form').on('submit', function(e) {
                   e.preventDefault();
             });
             
-            $('body > div.container > div > div > div.panel-body > form > fieldset > div:nth-child(9) > div.checkbox.col-md-2 > label > input[type=checkbox]').click(function() {
+            $('body > div.container > div > div > div.panel-body > form > fieldset > div:nth-child(9) > div.checkbox.col-md-2 > label > input[type=checkbox], #handicapped').click(function() {
                 var myId = $(this).prop('id');
-                var n = myId[myId.length - 1];
-                if ($('#handicap'+n).prop('disabled')) {
-                    $('#handicap'+n).prop('disabled', false);
+                if (myId == "handicapped") {
+                    if ($('#handicap').prop('disabled')) {
+                        $('#handicap').prop('disabled', false);
+                    } else {
+                        $('#handicap').prop('disabled', true);
+                        $('#handicap').val("");
+                    }
                 } else {
-                    $('#handicap'+n).prop('disabled', true);
+                    var n = myId[myId.length - 1];
+                    if ($('#handicap'+n).prop('disabled')) {
+                        $('#handicap'+n).prop('disabled', false);
+                    } else {
+                        $('#handicap'+n).prop('disabled', true);
+                        $('#handicap'+n).val("");
+                    }
                 }
             });
             
@@ -150,16 +145,6 @@
                             )
                          
                     ).find('#replacer').submit();
-                            
-                            
-                    
-                    
-                    
-                    /*alert(JSON.stringify(myData));
-                    //document.cookie = "data="+JSON.stringify(myData)+y;
-                    bake_cookie('form', myData);
-                    
-                    document.location = "/flight/sendbookingmail";*/
     
                 } else {
                     $('body > div.container > div > div.row > div > div').show();
