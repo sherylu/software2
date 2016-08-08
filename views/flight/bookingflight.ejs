@@ -133,7 +133,7 @@
                     
                     var myData = {
                         obj: clients,
-                        reservation: [<%-'\"'+flightCodeLeaving+'\"'%> <%-flightCodeReturning == undefined? (',\"' + flightCodeReturning +'\"') : ''%>],
+                        reservation: [<%-'\"'+flightCodeLeaving+'\"'%> <%-flightCodeReturning != ''? (',\"' + flightCodeReturning +'\"') : ''%>],
                         numberOfSeats: <%=adultSeats%>
                     }
                     

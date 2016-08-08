@@ -174,6 +174,7 @@ module.exports = {
         var seats = myData.numberOfSeats;
         var fligthCodes = myData.reservation;
         var client = clients[0];
+    
 
         var reservation = { quantity: seats,
                             creationDate: new Date(),
@@ -185,24 +186,10 @@ module.exports = {
                                 newReservation.flightCode = code;
                                 return newReservation; 
                             });
-                            
+
 
         Reservation.create(reservations)
             .then(function(persistedReservations){
-                
-                console.log('Persisted reservation');
-                console.log(persistedReservations);
-                console.log('tipo: ');
-                console.log(typeof persistedReservations);
-                console.log('==========================');
-                
-                clients = clients.map(function(client) {
-                    var newClient = client;
-                    newClient.reservations = persistedReservations;
-                    console.log(newClient);
-                    console.log('==========');
-                    return newClient;
-                });
                 
                 var passportIds = clients.map(function(client) {
                     return {passportId: client.passportId}
@@ -212,25 +199,38 @@ module.exports = {
                 Client.findOrCreate(passportIds, clients)
                     .then(function(persistedClients) {
                         
-                        client.subject = 'RESERVA DE VUELO';
-                        sails.hooks.email.send(
-                            'bookingEmail',
-                            {
-                                name: client.firstName
-                            },
-                            {
-                                to: client.email,
-                                subject: client.subject
-                            },
-                            function (err) {
-                                console.log(err || 'Mail Sent !');
-                            }
-                        );
                         
-                        
-                        return res.view('flight/confirmation', { reservations: persistedReservations,
-                                                          clients: persistedClients
-                                                         });
+                        Client.find(passportIds)
+                        .then(function(finalClients) {
+                            
+                            finalClients.map(function(c) {
+                                c.reservations.add(persistedReservations);
+                                c.save(function() {});
+                            });
+                            
+                            client.subject = 'RESERVA DE VUELO';
+                            sails.hooks.email.send(
+                                'bookingEmail',
+                                {
+                                    name: client.firstName
+                                },
+                                {
+                                    to: client.email,
+                                    subject: client.subject
+                                },
+                                function (err) {
+                                    console.log(err || 'Mail Sent !');
+                                }
+                            );
+                            
+                            
+                            return res.view('flight/confirmation', { reservations: persistedReservations,
+                                                              clients: persistedClients
+                                                             });
+                        })
+                        .catch(function(err) {
+                           res.serverError(err);
+                        });
                     
                     })
                     .catch(function(err) {
