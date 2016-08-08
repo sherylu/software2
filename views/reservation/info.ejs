@@ -1,15 +1,46 @@
-<style>
-    
-</style>
+<%
+function getProperName(state) {
+    var stateName;
+    switch(state) {
+        case 'Payment Pending': stateName = 'PENDIENTE DE PAGO';
+                                break;
+        case 'Payed': stateName = 'PAGADA';
+                      break;
+        case 'Cancelled' : stateName = 'CANCELADA';
+                           break;
+    }
+    return stateName;
+}
+
+function getProperClass(state) {
+    var className;
+    switch(state) {
+        case 'Payment Pending': className = 'info';
+                                break;
+        case 'Payed': className = 'success';
+                      break;
+        case 'Cancelled' : className = 'danger';
+                           break;
+    }
+    return className;
+}
+%>
+
+
+<div class="container">
+    <div class="col-md-6" id="alert">
+        
+    </div>
+</div>
 
 <div class="row">
 
 <h2>Informacion de la reserva</h2>
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <tbody>
         <tr>
             <td>Codigo de vuelo:</td>
-            <td><%=reservation.code%></td>
+            <td id="myCode"><%=reservation.code%></td>
         </tr>
         <tr>
             <td># de Asientos:</td>
@@ -24,8 +55,12 @@
             <td><%=reservation.creationDate.toLocaleDateString()%></td>
         </tr>
         <tr>
+            <td>Total a pagar:</td>
+            <td>$<%=reservation.price%></td>
+        </tr>
+        <tr>
             <td>Estado de la Reserva:</td>
-            <td><%=reservation.state%></td>
+            <td id="state" class="<%=getProperClass(reservation.state)%>"><%=getProperName(reservation.state)%></td>
         </tr>
     </tbody>
 </table>
@@ -34,7 +69,7 @@
 <div class="row">
         <div class="col-md-12">
             <h2>Pasajeros de la reserva</h2>
-            <table class="table table-striped" id="passenger">
+            <table class="table table-striped table-hover" id="passenger">
                 <thead>
                 <tr>
                     <th>Primer Nombre</th>
@@ -67,10 +102,10 @@
         <br>
       <div class="row">
             <div class="col-md-5 text-right">
-        		<button type="button" class="btn btn-info custom-button-width .navbar-right">Pagar Reserva</button>
+        		<button type="button" class="btn btn-info custom-button-width .navbar-right" id="btnPay">Pagar Reserva</button>
         	</div>
         	<div class="col-md-5 text-right">
-    			<button type="button" class="btn btn-danger custom-button-width .navbar-right">Cancelar Reserva</button>
+    			<button type="button" class="btn btn-danger custom-button-width .navbar-right" id="btnCancel">Cancelar Reserva</button>
         	</div>
       </div>
       
@@ -78,3 +113,45 @@
       <br>
       <br>
 </div>
+
+<script>
+    
+    $(document).ready(function(){
+       
+       $('#btnPay').click(function() {
+            var code = $('#myCode').text(); 
+            $.ajax({
+                type: "PUT",
+                url: "https://software2-sherylu.c9users.io/reservation/"+code,
+                contentType: "application/json",
+                data: JSON.stringify({"state": "Payed"})
+            }).done(function() {
+                $('#state').removeClass();
+                 $('#state').addClass('<%=getProperClass('Payed')%>');
+                $('#state').html('<%=getProperName('Payed')%>');
+                $('#alert').html($('.payed').clone());
+            });
+            
+            
+       });
+       
+       $('#btnCancel').click(function() {
+            var code = $('#myCode').text(); 
+            $.ajax({
+                type: "PUT",
+                url: "https://software2-sherylu.c9users.io/reservation/"+code,
+                contentType: "application/json",
+                data: JSON.stringify({"state": "Cancelled"})
+            }).done(function() {
+                $('#state').removeClass();
+                $('#state').addClass('<%=getProperClass('Cancelled')%>');
+                $('#state').html('<%=getProperName('Cancelled')%>');
+                $('#alert').html($('.cancelled').clone());
+            });
+       });
+       
+       
+       
+       
+    });
+</script>

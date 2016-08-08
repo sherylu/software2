@@ -5,7 +5,7 @@ module.exports.email = {
         pass: 'e865aefe845aee0f0b123ae1935de2f0'
     },
     templateDir: 'api/emailTemplates',
-    from: 'info@softwareII.com',
+    from: 'infoFlight@SoftwareII.com',
     testMode: false,
     ssl: true
 };

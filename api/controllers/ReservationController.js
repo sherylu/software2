@@ -10,6 +10,10 @@ module.exports = {
         res.view('reservation/consult');
     },
     
+    loading: function(req, res) {
+        res.view('reservation/loading');  
+    },
+    
     getinfo: function(req, res) {
         var code = req.param('reservationCode');
         Reservation.findOne({code: code}).populate('owners')

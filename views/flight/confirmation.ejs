@@ -17,7 +17,7 @@
       <p>
         <ul>
           <%_.each(reservations, function(reservation) {%>
-            <li>Codigo: <b><%=reservation.code%></b></li>
+            <li>Codigo: <b><%=reservation.code%></b> - Total: $<%=reservation.price%></li>
           <% }) %>
         </ul>
       </p>

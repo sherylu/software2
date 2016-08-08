@@ -70,8 +70,14 @@ module.exports = {
         if (flightDeparture >= flightArrival) {
             errorsMsg.push('La fecha de partida no puede ser mayor a la de llegada')
         }*/
+        if (isNaN(seatAdult)) {
+            errorsMsg.push('EL numero de asientos no es valido');
+        }
         if (totalseats <= 0) {
             errorsMsg.push('Al menos un ticket debe ser seleccionado');
+        }
+        if (seatToddler>seatAdult){
+            errorsMsg.push('No puede viajar con más bebes que adultos');
         }
         Airport.findOne({
             code: departureAirport

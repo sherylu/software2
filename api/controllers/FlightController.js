@@ -166,42 +166,45 @@ module.exports = {
 
     sendbookingmail: function (req, res) {
         
-
         var myData = JSON.parse(req.param('data'));
-        
 
         var clients = myData.obj;
         
         var seats = myData.numberOfSeats;
         var fligthCodes = myData.reservation;
         var client = clients[0];
+        
+        function priceForClient(ticketPrice, client) {
+            var discount = 0.0;
+            if (client.age < 12) {
+                discount += 50.0;
+            }
+            if (client.handicap > 0) {
+                discount+=(Math.floor(client.handicap/10) * 5);
+            }
+            return (ticketPrice*(1-(discount/100)));
+        }
+        
+        var price = '500';
+        
+        var ticketValues = clients.map(function(client) {
+           return (priceForClient(price, client)); 
+        });
+        
+        var totalPrice = ticketValues.reduce(function(a, b) {return a+b}, 0);
     
 
         var reservation = { quantity: seats,
                             creationDate: new Date(),
-                            state: "Payment Pending"
+                            state: "Payment Pending",
+                            price: totalPrice
                           }
-                          
-        console.log('FLIGHT CODES');
-        console.log(fligthCodes);
-        console.log('============');
-                          
         
         var reservations =  fligthCodes.map(function(code) {
                                 var newReservation = JSON.parse(JSON.stringify(reservation));
-                                
                                 newReservation.flightCode = code;
-                                console.log('Reservations: ');
-                                console.log(reservation);
-                                console.log('New reservation: ');
-                                console.log(newReservation);
                                 return newReservation; 
                             });
-                            
-        console.log('RESERVATIONS');
-        console.log(reservations);
-        console.log('=====================');
-
 
         Reservation.create(reservations)
             .then(function(persistedReservations){
@@ -225,8 +228,17 @@ module.exports = {
                             Flight.findByFlightCode(fligthCodes).populate('seats')
                                 .then(function(flights) {
                                     
-
+                                    flights.map(function(f) {
+                                        var availableSeats = f.seats.length;
+                                        for (var i=0; i<seats; i++) {
+                                            f.seats.remove(availableSeats-10-i);
+                                            f.save(function() {});
+                                        }
+                                    });
+                                    
                                     client.subject = 'RESERVA DE VUELO';
+                                    
+                                    /*
                                     sails.hooks.email.send(
                                         'bookingEmail',
                                         {
@@ -240,6 +252,10 @@ module.exports = {
                                             console.log(err || 'Mail Sent !');
                                         }
                                     );
+                                    */
+                                    
+                                    
+                                    Mailer.sendBookingEmail(client);
                                     
                                     
                                     return res.view('flight/confirmation', { reservations: persistedReservations,

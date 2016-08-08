@@ -30,6 +30,10 @@ module.exports = {
             type: 'string',
             required: true
         },
+        price: {
+            type: 'float',
+            required: true
+        },
         owners: {
             collection: 'client',
             via: 'reservations'
