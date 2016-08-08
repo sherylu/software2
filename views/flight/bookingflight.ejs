@@ -9,14 +9,16 @@
             </div>
         </div>
 
-            <%- include partials/client.ejs %>
             <div class="alert alert-info" role="alert">Pasajeros adultos</div>
+            <%- include partials/client.ejs %>
+		
+	    <br/>
             <% for (var i=1; i<adultSeats; i++) { %>
                 <%- include partials/passenger.ejs %>
             <% } %>
 
             <div class="alert alert-info" role="alert">Pasajeros niños</div>
-            <% for (var i=1; i<childSeats; i++) { %>
+            <% for (var i=adultSeats; i<childSeats+adultSeats; i++) { %>
                 <%- include partials/passenger.ejs %>
             <% } %>
             
