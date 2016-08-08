@@ -30,8 +30,9 @@ module.exports = {
             type: 'string',
             required: true
         },
-        owner: {
-            model: 'client'
+        owners: {
+            collection: 'client',
+            via: 'reservations'
         }
     }
 };

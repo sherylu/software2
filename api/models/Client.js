@@ -41,7 +41,8 @@ module.exports = {
         },
         reservations: {
             collection: 'reservation',
-            via: 'owner'
+            via: 'owners',
+            dominant: true
         }
     }
 };
