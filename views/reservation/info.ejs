@@ -1,0 +1,80 @@
+<style>
+    
+</style>
+
+<div class="row">
+
+<h2>Informacion de la reserva</h2>
+<table class="table table-striped">
+    <tbody>
+        <tr>
+            <td>Codigo de vuelo:</td>
+            <td><%=reservation.code%></td>
+        </tr>
+        <tr>
+            <td># de Asientos:</td>
+            <td><%=reservation.quantity%></td>
+        </tr>
+        <tr>
+            <td>Codigo de vuelo:</td>
+            <td><%=reservation.flightCode%></td>
+        </tr>
+        <tr>
+            <td>Reserva realidaza:</td>
+            <td><%=reservation.creationDate.toLocaleDateString()%></td>
+        </tr>
+        <tr>
+            <td>Estado de la Reserva:</td>
+            <td><%=reservation.state%></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<div class="row">
+        <div class="col-md-12">
+            <h2>Pasajeros de la reserva</h2>
+            <table class="table table-striped" id="passenger">
+                <thead>
+                <tr>
+                    <th>Primer Nombre</th>
+                    <th>Primer Apellido</th>
+                    <th>Pasaporte</th>
+                    <th>Edad</th>
+                    <th>Discapacidad</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <% _.each(reservation.owners, function(owner) { %>
+                <tr>
+                    <td><%=owner.firstName%></td>
+                    <td><%=owner.lastName%></td>
+                    <td><%=owner.passportId%></td>
+                    <td><%=owner.age%></td>
+                    <td><%=owner.handicap%></td>
+                </tr>
+                <% }) %>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    
+    <div class="container-fluid">
+        <br>
+        <br>
+      <div class="row">
+            <div class="col-md-5 text-right">
+        		<button type="button" class="btn btn-info custom-button-width .navbar-right">Pagar Reserva</button>
+        	</div>
+        	<div class="col-md-5 text-right">
+    			<button type="button" class="btn btn-danger custom-button-width .navbar-right">Cancelar Reserva</button>
+        	</div>
+      </div>
+      
+      <br>
+      <br>
+      <br>
+</div>

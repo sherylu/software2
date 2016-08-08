@@ -171,6 +171,7 @@ module.exports = {
         
 
         var clients = myData.obj;
+        
         var seats = myData.numberOfSeats;
         var fligthCodes = myData.reservation;
         var client = clients[0];
@@ -180,12 +181,26 @@ module.exports = {
                             creationDate: new Date(),
                             state: "Payment Pending"
                           }
+                          
+        console.log('FLIGHT CODES');
+        console.log(fligthCodes);
+        console.log('============');
+                          
         
         var reservations =  fligthCodes.map(function(code) {
-                                var newReservation = reservation;
+                                var newReservation = JSON.parse(JSON.stringify(reservation));
+                                
                                 newReservation.flightCode = code;
+                                console.log('Reservations: ');
+                                console.log(reservation);
+                                console.log('New reservation: ');
+                                console.log(newReservation);
                                 return newReservation; 
                             });
+                            
+        console.log('RESERVATIONS');
+        console.log(reservations);
+        console.log('=====================');
 
 
         Reservation.create(reservations)
@@ -194,7 +209,6 @@ module.exports = {
                 var passportIds = clients.map(function(client) {
                     return {passportId: client.passportId}
                 });
-                
                 
                 Client.findOrCreate(passportIds, clients)
                     .then(function(persistedClients) {
@@ -208,25 +222,36 @@ module.exports = {
                                 c.save(function() {});
                             });
                             
-                            client.subject = 'RESERVA DE VUELO';
-                            sails.hooks.email.send(
-                                'bookingEmail',
-                                {
-                                    name: client.firstName
-                                },
-                                {
-                                    to: client.email,
-                                    subject: client.subject
-                                },
-                                function (err) {
-                                    console.log(err || 'Mail Sent !');
-                                }
-                            );
+                            Flight.findByFlightCode(fligthCodes).populate('seats')
+                                .then(function(flights) {
+                                    
+
+                                    client.subject = 'RESERVA DE VUELO';
+                                    sails.hooks.email.send(
+                                        'bookingEmail',
+                                        {
+                                            name: client.firstName
+                                        },
+                                        {
+                                            to: client.email,
+                                            subject: client.subject
+                                        },
+                                        function (err) {
+                                            console.log(err || 'Mail Sent !');
+                                        }
+                                    );
+                                    
+                                    
+                                    return res.view('flight/confirmation', { reservations: persistedReservations,
+                                                                      clients: persistedClients
+                                                                     });
+                                    
+                                })
+                                .catch(function(err) {
+                                    res.serverError(err);
+                                })
                             
                             
-                            return res.view('flight/confirmation', { reservations: persistedReservations,
-                                                              clients: persistedClients
-                                                             });
                         })
                         .catch(function(err) {
                            res.serverError(err);

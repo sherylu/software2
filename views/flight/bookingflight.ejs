@@ -128,7 +128,7 @@
                 }
 
                 clients.push(retrieveClient());
-                passengers = retrievePassengers(<%=adultSeats%>);
+                passengers = retrievePassengers(<%=adultSeats+childSeats%>);
                 clients = clients.concat(passengers);
 
                 if (validationErrors.length == 0 ) {

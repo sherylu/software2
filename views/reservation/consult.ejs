@@ -1,0 +1,77 @@
+<%- include ../partials/banner.ejs %>
+
+<style>
+#custom-search-input{
+    padding: 3px;
+    border: solid 1px #E4E4E4;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+#custom-search-input input{
+    border: 0;
+    box-shadow: none;
+}
+
+#custom-search-input button{
+    margin: 2px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #666666;
+    padding: 0 8px 0 10px;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input button:hover{
+    border: 0;
+    box-shadow: none;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input .glyphicon-search{
+    font-size: 23px;
+}
+</style>
+
+<div class="container">
+    <div class="col-md-8">
+        <div class="row">
+            <h2>Ingrese el codigo de la reserva</h2>
+            <div id="custom-search-input">
+                <div class="input-group col-md-12">
+                    <input type="text" class="form-control input-lg" placeholder="Codigo de Reserva" id='code'/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="button" id="search">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <br><br>
+        
+        <div class="row">
+            <div id="reservation">
+                <!--Aqui va el contenido de la busqueda-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    $(document).ready(function(){
+       $('#bs-example-navbar-collapse-1 > ul > li').removeClass('active');
+       $('#bs-example-navbar-collapse-1 > ul > li:nth-child(2)').addClass('active');
+       
+       
+       $('#search').click(function() {
+            var code = $('#code').val(); 
+            $.post("/reservation/getinfo", {reservationCode: code}, function(data) {
+               $('#reservation').html(data); 
+            });
+       });
+    });
+</script>

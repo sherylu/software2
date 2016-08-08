@@ -41,7 +41,7 @@ module.exports = {
         },
         seats: {
             collection: 'seat',
-            via: 'seatNumber',
+            via: 'flights',
             dominant: true
         }
     },

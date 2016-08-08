@@ -29,7 +29,7 @@ module.exports = {
         },
         flights: {
             collection: 'flight',
-            via: 'flightCode'
+            via: 'seats'
         }
     }
 };
